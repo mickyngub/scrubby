@@ -43,6 +43,7 @@ struct CleaningView: View {
                 }
                 .padding(.top, 18)
                 DoneButton(action: session.finish)
+                    .demoAnchor("done")
                     .padding(.top, 26)
                     .opacity(done ? 0 : 1)
                     .disabled(done)

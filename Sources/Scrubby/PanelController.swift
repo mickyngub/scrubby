@@ -106,7 +106,7 @@ final class PanelController {
     }
 }
 
-private struct PanelRootView: View {
+struct PanelRootView: View {
     @ObservedObject var session: CleaningSession
     let onStart: () -> Void
 
@@ -203,6 +203,7 @@ private struct StartCard: View {
             .contentShape(shape)
         }
         .buttonStyle(.plain)
+        .demoAnchor("start")
         .onHover { hovering = $0 }
         .animation(Theme.snappy(0.2), value: hovering)
         .pointerCursor()
