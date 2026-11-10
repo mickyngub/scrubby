@@ -1,0 +1,33 @@
+name: CI
+
+# Pull requests and manual runs only, as in Merly: Scrubby ships as source that
+# every user builds, so a green run on main proves nothing their own build
+# doesn't, but a PR gate catches breakage before it lands.
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build & selftest
+    # Not macos-14: its Swift 5.10 rejects code that Swift 6.2+ builds fine.
+    # The macOS 14 floor is still enforced by `.macOS(.v14)` in Package.swift.
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Swift version
+        run: swift --version
+
+      - name: Build (debug)
+        run: swift build
+
+      - name: Selftest
+        run: .build/debug/Scrubby --selftest
+
+      - name: Assemble app bundle
+        run: scripts/bundle.sh

@@ -1,6 +1,6 @@
 # Scrubby
 
-Native macOS menu bar app (Swift/AppKit + SwiftUI, SwiftPM, no Xcode): car wash mode for the keyboard. Click the critter, click Start cleaning, and every key is held back until you click Done with the trackpad or mouse. Styled after its sibling `../merly/` (theme tokens, frosted panel, pixel critter). `CLAUDE.md` is a symlink to this file.
+Native macOS menu bar app (Swift/AppKit + SwiftUI, SwiftPM, no Xcode): car wash mode for the keyboard. Click the critter, click Start cleaning, and every key is held back until you click Done with the trackpad or mouse. Styled after its sibling `../merly/` (theme tokens, frosted panel, pixel critter). Public, MIT: github.com/mickyngub/scrubby. `CLAUDE.md` is a symlink to this file.
 
 ## Commands
 
@@ -10,14 +10,17 @@ Native macOS menu bar app (Swift/AppKit + SwiftUI, SwiftPM, no Xcode): car wash 
 - `.build/debug/Scrubby --clean --unlock-after 5`: start cleaning straight away, auto-unlock after 5 s (QA)
 - `scripts/bundle.sh`: release build and assemble `build/Scrubby.app`
 - `scripts/install.sh`: bundle, move the old copy to the Trash, install to `/Applications`, launch
+- `scripts/record-demo.sh`: re-record `assets/scrubby-demo.gif` from the staged demo (`Scrubby --demo --record <file.mov>`, ScreenCaptureKit, macOS 15+). It covers a 960×600 patch of the main display for ~15 s; the keyboard stays live.
+- `.build/debug/Scrubby --write-banner assets/scrubby-banner.png`: re-render the README banner
 
 ## Layout
 
 - `KeyFilter.swift`: which event types and system-defined subtypes get swallowed. Pure, covered by `--selftest`.
 - `KeyBlocker.swift`: the HID-level `CGEventTap`.
-- `CleaningSession.swift`: idle → cleaning → finished state, permission, 5-minute auto-unlock failsafe.
+- `CleaningSession.swift`: idle → cleaning → finished state, permission, 5-minute auto-unlock failsafe. Side effects (tap, overlay, focus) go through `CleaningEffects`: `LiveCleaningEffects` in the app, `StageEffects` in the demo.
+- `DemoStage.swift`: the README demo, the real panel and overlay views on a staged desktop with a scripted cursor. Controls it aims at carry `.demoAnchor(_:)`.
 - `PanelController.swift` / `OverlayController.swift` + `CleaningView.swift`: the menu bar dropdown and the full-screen car-wash overlay (one window per display).
-- `Critter.swift`: the 16×16 pixel critter (art grid, outline pass, mood faces). It also renders the app icon via `--write-iconset`.
+- `Critter.swift`: the 16×16 pixel critter (art grid, outline pass, mood faces). It also renders the app icon (`IconWriter`, `--write-iconset`) and the README banner (`BannerWriter`).
 - `Theme.swift`: tokens copied from Merly's `Theme.swift`. Change them there first.
 
 ## Footguns

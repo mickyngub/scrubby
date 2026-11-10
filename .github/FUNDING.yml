@@ -1,0 +1,7 @@
+# Renders the ❤️ Sponsor button on the repo page and the sidebar funding links.
+# Requires Settings › General › Features › Sponsorships to be enabled.
+#
+# The GitHub Sponsors listing was approved on 2026-08-23, so both entries render.
+
+github: [mickyngub]
+buy_me_a_coffee: mickyngub
